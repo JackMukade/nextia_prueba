@@ -1,66 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Prueba para NEXTIA utilizando JWT utilizando Laravel 9
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Casos de uso.
+Desarrollar un API Rest con la ayuda de algún Framework PHP. Respuestas y envío de
+información mediante JSON.
+1. Crear proyecto y configuración.
 
-## About Laravel
+R= Se utilizo la version de Laravel 9
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+___________________________________________
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. Crear un Modelo “Base” del cual heredarán los demás modelos que creemos en nuestro
+proyecto. Este Modelo “Base” contendrá los siguientes campos
+a. id = primary key
+b. created_at = Tipo fecha, que se guarde automáticamente al crear un registro
+c. updated_at = Tipo fecha, este se actualizará siempre que se actualice un
+registro.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+R= En la carpeta de app/Models se encuentran los archivos BaseModel.php, BienesModel.php, UserModel.php siendo el ejemplo
+de una herencia, pero con Laravel no es necesario realizar estos procedimientos al utilizar el ORM (Object-Relational Mapping) es posible crear la base de datos desde el proyecto (Migrations) una vez creada las tablas desde el proyecto es facil crear los modelos relacionados con la base de datos (Bienes.php, User.php) son los modelos utilizados principalmente
+para esta aplicación y con las variables creadas segun la base de datos.
+___________________________________________
 
-## Learning Laravel
+3. Generar un modelo para usuarios (que herede de BaseModel), NOTA. este modelo se
+utilizará también para el proceso de autenticación, los datos que almacenará dicho
+modelo son los siguientes.
+a. Nombre
+b. Usuario
+c. Contraseña (Guardarla encriptada)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+R= El modelo utilizado se encuentra en la carpeta app/Models/User.php y la tabla fue fecha con el archivo que se encuentra
+en database/migrations/2014_10_12_000000_create_users_table.php
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+___________________________________________
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. Realizar endpoints y lógica para la autenticación de usuarios, se tendrá que hacer bajo el
+estándar JWT.
+a. Endpoint para generar JWT en base a usuario y contraseña.
+b. Endpoint para crear usuario y crear JWT al momento de que se registre el
+usuario.
 
-## Laravel Sponsors
+R= en el archivo que se encuentra en routes/api.php se puede ver los endpoint utilizados para trabajar con jwt
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+'api/users/create'  se guarda el usuario y te devuelve tu endpoint
 
-### Premium Partners
+'api/users/login'   entra en sesión el usuario y permite utilizar los otros endpoint con el token
+    
+'api/users/logout'  cierra la sesion
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+'api/users/refresh' devuelve otro token
 
-## Contributing
+___________________________________________
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. Crear un modelo llamado Bienes (que herede de BaseModel). Los datos que almacenará
+son los siguientes.
+a. articulo = Tipo string, max 255
+b. descripcion = Tipo string, max 255
+c. usuario_id = Relación a modelo Usuario.
 
-## Code of Conduct
+R= El modelo utilizado se encuentra en la carpeta app/Models/Bienes.php y la tabla fue fecha con el archivo que se encuentra
+en database/migrations/2022_11_05_041546_create_bienes_table.php
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+___________________________________________
 
-## Security Vulnerabilities
+6. Crear un script el cual registre un usuario en la base de datos (Esto por que el Modelo
+Bien requiere de un usuario existente), seguido de esto se te compartió un archivo csv
+con ayuda de la librería fgetcsv o algúna de tu preferencia importar toda la información
+de ese archivo a la base de datos al modelo Bienes, el id del usuario registrado
+previamente se tendrá que almacenar en cada registro.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Para crear un usuario es posible utilizar el endpoint de 
+'api/users/create' utilizando los inputs de name, email y password en un POST
 
-## License
+y si te logueas es posible utilizar el endpoint :
+'api/bienes/files' este comienza a leer el archivo que me mandaron que se encuentra guardado en el proyecto,
+la logica se encuentra en el controlador BienesController.php que se encuentra en la carpeta app/Http/Controllers
+siendo la funcion filescsv
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+___________________________________________
+7. Crear endpoints CRUD para el modelo Bienes. Es importante que al regresar la
+información siempre regrese el objeto usuario. Importante: Todos los endpoints tienen
+que tener seguridad JWT.
+
+Los endpoints para poder utilizar el CRUD para bienes, todo se encuentra en el controlador 
+BienesController.php que se encuentra en la carpeta app/Http/Controllers se utilizo los terminos de 
+API RESTful para poder hacer las llamadas
+
+Create: api/bienes/create    
+
+Read: api/bienes/read/{id}    
+
+Update: api/bienes/update
+
+Delete: api/bienes/delete
+
+todos estos estan protegidos con un middleware que lee la informacion antes de que entre a los controladores para detectar
+el JWT, en caso de no estar logueado te regresa al apartado de Login.
+
+___________________________________________
+8. Crear un endpoint especial para Bienes al cual se le puedan enviar múltiples id’s y este
+me regrese un array de los registros solicitados.
+
+api/bienes/filter/{id}
+
+es parecido al read solo que los ids deben de estar dividos por , esto permitira hacer busqueda de varios ids
+
+ejemplos: 
+api/bienes/filter/100,101,102,103
+
+EXTRA:
+
+Debido a que ya se esta trabajando con Laravel ya se cuenta con una estructura MVC aunque en este caso solo se esta 
+usando la parte del Modelo y el Controlador otro punto importate es que uso un poco la arquitectura SOLID 
+separando los archivos para crear funciones que tengan una unica funcion por eso se creo la carpeta de Repositories
+App/Repositories  es donde se crearon los archivos para interactuar con la base de datos utilizando ELOQUENT que es parte de Laravel para manipular las base de datos 

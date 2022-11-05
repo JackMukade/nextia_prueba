@@ -15,10 +15,10 @@ class AuthenticationController extends Controller {
 
     public function login(LoginRequest $request) {
 
-        $credentials = $request->only('email', 'password');
-        $token       = Auth::attempt($credentials);
-        if (!$token) { return response()->json(['response' => false], 401); }
-        $user        = Auth::user();
+        $credentials = $request->only('email', 'password'); #Toma los inputs
+        $token       = Auth::attempt($credentials); #Intenta conectar
+        if (!$token) { return response()->json(['response' => false], 401); } #Si no puede marca error
+        $user        = Auth::user(); #Toma el usuario conectado 
 
         return response()->json(['response' => true, 'user' => $user, 'token' => $token ]);
 
@@ -27,8 +27,8 @@ class AuthenticationController extends Controller {
     public function create(RegisterRequest $request){
 
         $data     = $request->all();
-        $create   = $this->user->create($data);
-        $response = (count($create) > 0 ) ? true : false;
+        $create   = $this->user->create($data); #Crea el usuario y toma el token
+        $response = (count($create) > 0 ) ? true : false; #si tiene datos fue un exito
        
         return response()->json(['response' => true, 'user' => $create], 200);
     }

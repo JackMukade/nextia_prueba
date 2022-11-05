@@ -16,6 +16,7 @@ use App\Http\Controllers\BienesController;
 |
 */
 
+#Todo esta dentro de un mismo controlador
 Route::controller(AuthenticationController::class)->group(function () {
    
     Route::post('users/create'  , 'create');
@@ -28,7 +29,7 @@ Route::controller(AuthenticationController::class)->group(function () {
 
 });
 
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:api'])->group(function () { #Primero se debe pasar por el antes de los endspoints si no detecta login no deja
 
     Route::post('bienes/create'      , [BienesController::class, 'create']);
 

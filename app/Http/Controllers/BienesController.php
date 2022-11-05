@@ -23,7 +23,7 @@ class BienesController extends Controller {
 
         $user          = $this->user;
         $data          = $request->all();
-        $data['user']  = $user['id'];
+        $data['user']  = $user['id']; #Le agrego el id del usuario que lo creo
            
         $create        = $this->bienes->create($data);
         $response      = (count($create) > 0 ) ? true : false;
@@ -35,11 +35,11 @@ class BienesController extends Controller {
     public function filescsv(Request $request) {
 
         $user         = $this->user;
-        $itemsInExcel = Excel::toArray(new ItemImport, storage_path('Prueba_Tecnica_php.csv'));
+        $itemsInExcel = Excel::toArray(new ItemImport, storage_path('Prueba_Tecnica_php.csv')); #Toma los datos de los archivos
         foreach ($itemsInExcel[0] as $item) {
                         
             $data   = ['id' => $item[0], 'articulo' => $item[1], 'descripcion' => $item[2], 'user' => $user['id']];
-            $create = $this->bienes->create($data);
+            $create = $this->bienes->create($data); #Va agregando los datos que se encontraban el archivo
            
         }
 
@@ -49,8 +49,8 @@ class BienesController extends Controller {
 
     public function read(Request $request, string $id) {
 
-        $read     = $this->bienes->find($id);
-        $response = (count($read) > 0 ) ? true : false;
+        $read     = $this->bienes->find($id); #Busca los datos segun el id dado
+        $response = (count($read) > 0 ) ? true : false; #SI encontro datos esta bien
 
         $user     = $this->user;
        
@@ -60,11 +60,11 @@ class BienesController extends Controller {
 
     public function filter(Request $request, string $id) {
 
-        $ids       = explode(',', $id);
-        $idCollect = collect($ids); 
-        $collect   = $idCollect->map(function ($id) { return intval(trim($id)); })->toArray();
+        $ids       = explode(',', $id); #Crea un array con los datos datos
+        $idCollect = collect($ids);  #Crea un collection de laravel para trabajar el array
+        $collect   = $idCollect->map(function ($id) { return intval(trim($id)); })->toArray(); #Convierte en ids
        
-        $read      = $this->bienes->filter($collect);
+        $read      = $this->bienes->filter($collect); #Busca los ids
         $response  = (count($read) > 0 ) ? true : false;
 
         
@@ -77,9 +77,9 @@ class BienesController extends Controller {
     public function update(Request $request) {
 
         $data     = $request->all();
-        $read     = $this->bienes->find($data['id']);
-        $idReal   = $read['id']; 
-        $update   = $this->bienes->update($idReal, $data);
+        $read     = $this->bienes->find($data['id']); #Busca por el id dado el usuario
+        $idReal   = $read['id']; #toma el consecutivo como id real
+        $update   = $this->bienes->update($idReal, $data); #Actualiza los datos segun el id consectuvio
         $response = (count($update) > 0 ) ? true : false;
 
         $user     = $this->user;
@@ -91,9 +91,9 @@ class BienesController extends Controller {
     public function delete(Request $request) {
 
         $data     = $request->all();
-        $read     = $this->bienes->find($data['id']);
+        $read     = $this->bienes->find($data['id']);#Busca por el id dado el usuario
         $idReal   = $read['id']; 
-        $this->bienes->delete($idReal);
+        $this->bienes->delete($idReal); #Elimina los datos segun el id consectuvio
 
         $user     = $this->user;
         return response()->json(['response' => true, 'user' => $user], 200);
