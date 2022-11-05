@@ -1,0 +1,6 @@
+<?php 
+namespace App\Interfaces;
+
+use Illuminate\Database\Eloquent\Collection;
+
+interface Repository extends ReadRepository, WriteRepository {  } 
